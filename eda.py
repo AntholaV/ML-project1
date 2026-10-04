@@ -1,7 +1,4 @@
 """
-Usage:
-    python eda.py
-
 Prints class balance, missing-value counts, and per-column value ranges
 for x_train, to help decide on preprocessing (NaN handling, special
 BRFSS codes, scaling, etc.). Only uses numpy and matplotlib, as required.
