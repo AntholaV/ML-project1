@@ -12,6 +12,7 @@ def compute_loss(y, tx, w):
 
     return calculate_mse(e)
 
+
 def compute_gradient(y, tx, w):
     """Compute the gradient."""
     err = y - tx.dot(w)
@@ -36,6 +37,7 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
 
     return w, loss
 
+
 def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
     """Stochastic gradient descent algorithm."""
 
@@ -44,8 +46,8 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
     for n_iter in range(max_iters):
         i = np.random.randint(len(y))
 
-        y_batch = y[i:i + 1]
-        tx_batch = tx[i:i + 1]
+        y_batch = y[i : i + 1]
+        tx_batch = tx[i : i + 1]
 
         grad, _ = compute_gradient(y_batch, tx_batch, w)
         w = w - gamma * grad
@@ -53,6 +55,7 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
     loss = compute_loss(y, tx, w)
 
     return w, loss
+
 
 def least_squares(y, tx):
     """Compute the least squares solution using the normal equations.
@@ -71,6 +74,7 @@ def least_squares(y, tx):
     mse = compute_loss(y, tx, w)
     return w, mse
 
+
 def ridge_regression(y, tx, lambda_):
     """Implement ridge regression."""
 
@@ -82,6 +86,7 @@ def ridge_regression(y, tx, lambda_):
     loss = compute_loss(y, tx, w)
 
     return w, loss
+
 
 def sigmoid(t):
     """Apply the sigmoid function."""
