@@ -1,7 +1,4 @@
 """
-Usage:
-    python run.py
-
 Expects x_train.csv, y_train.csv, x_test.csv in a `data/` folder next to
 this script.
 """
