@@ -35,24 +35,25 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     loss = compute_loss(y, tx, w)
 
     return w, loss
-"""
+
 def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
     """Stochastic gradient descent algorithm."""
 
     w = initial_w
-    batch_size = 1
 
     for n_iter in range(max_iters):
-        for y_batch, tx_batch in batch_iter(
-            y, tx, batch_size=batch_size, num_batches=1
-        ):
-            grad, _ = compute_stoch_gradient(y_batch, tx_batch, w)
-            w = w - gamma * grad
+        i = np.random.randint(len(y))
+
+        y_batch = y[i:i + 1]
+        tx_batch = tx[i:i + 1]
+
+        grad, _ = compute_gradient(y_batch, tx_batch, w)
+        w = w - gamma * grad
 
     loss = compute_loss(y, tx, w)
 
     return w, loss
-"""
+
 def least_squares(y, tx):
     """Compute the least squares solution using the normal equations.
 
@@ -70,3 +71,61 @@ def least_squares(y, tx):
     mse = compute_loss(y, tx, w)
     return w, mse
 
+def ridge_regression(y, tx, lambda_):
+    """Implement ridge regression."""
+
+    aI = 2 * tx.shape[0] * lambda_ * np.identity(tx.shape[1])
+    a = tx.T.dot(tx) + aI
+    b = tx.T.dot(y)
+
+    w = np.linalg.solve(a, b)
+    loss = compute_loss(y, tx, w)
+
+    return w, loss
+
+def sigmoid(t):
+    """Apply the sigmoid function."""
+    return 1 / (1 + np.exp(-t))
+
+
+def compute_logistic_loss(y, tx, w):
+    """Compute the logistic loss."""
+    z = tx.dot(w)
+    loss = np.mean(np.logaddexp(0, z) - y * z)
+    return loss
+
+
+def compute_logistic_gradient(y, tx, w):
+    """Compute the gradient of the logistic loss."""
+    pred = sigmoid(tx.dot(w))
+    grad = tx.T.dot(pred - y) / len(y)
+    return grad
+
+
+def logistic_regression(y, tx, initial_w, max_iters, gamma):
+    """Logistic regression using gradient descent."""
+
+    w = initial_w
+
+    for n_iter in range(max_iters):
+        grad = compute_logistic_gradient(y, tx, w)
+        w = w - gamma * grad
+
+    loss = compute_logistic_loss(y, tx, w)
+
+    return w, loss
+
+
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
+    """Regularized logistic regression using gradient descent."""
+
+    w = initial_w
+
+    for n_iter in range(max_iters):
+        grad = compute_logistic_gradient(y, tx, w)
+        grad = grad + 2 * lambda_ * w
+        w = w - gamma * grad
+
+    loss = compute_logistic_loss(y, tx, w)
+
+    return w, loss
