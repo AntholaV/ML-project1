@@ -32,7 +32,11 @@ def compute_metrics(y_true, y_pred):
     accuracy = (tp + tn) / len(y_true)
     precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
     recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+    f1 = (
+        2 * precision * recall / (precision + recall)
+        if (precision + recall) > 0
+        else 0.0
+    )
     return {"accuracy": accuracy, "precision": precision, "recall": recall, "f1": f1}
 
 
@@ -46,7 +50,7 @@ def build_k_indices(n, k_fold, seed=SEED):
     folds = []
     start = 0
     for size in fold_sizes:
-        folds.append(indices[start:start + size])
+        folds.append(indices[start : start + size])
         start += size
     return folds
 
@@ -111,7 +115,9 @@ def cross_validate_logistic(y, x, k_fold, lambdas, gamma, max_iters):
 
 def print_results(name, results):
     print(f"\n--- {name} ---")
-    print(f"{'lambda':>10} {'accuracy':>10} {'precision':>10} {'recall':>10} {'f1':>10}")
+    print(
+        f"{'lambda':>10} {'accuracy':>10} {'precision':>10} {'recall':>10} {'f1':>10}"
+    )
     for lambda_, metrics in results.items():
         print(
             f"{lambda_:>10} {metrics['accuracy']:>10.4f} {metrics['precision']:>10.4f} "
@@ -134,7 +140,9 @@ def tune_threshold(y, x, k_fold, lambda_, gamma, max_iters, thresholds):
         x_val = apply_preprocessing(x[val_idx], stats)
 
         initial_w = np.zeros(x_tr.shape[1])
-        w, _ = reg_logistic_regression(y[train_idx], x_tr, lambda_, initial_w, max_iters, gamma)
+        w, _ = reg_logistic_regression(
+            y[train_idx], x_tr, lambda_, initial_w, max_iters, gamma
+        )
         y_score = sigmoid(x_val @ w)
 
         for t in thresholds:
@@ -169,7 +177,13 @@ def main():
     # pick the logistic lambda with the best F1 and sweep thresholds for it
     best_lambda = max(logistic_results, key=lambda l: logistic_results[l]["f1"])
     tune_threshold(
-        y_binary, x_train, K_FOLD, best_lambda, LOGISTIC_GAMMA, LOGISTIC_MAX_ITERS, THRESHOLDS_TO_TRY
+        y_binary,
+        x_train,
+        K_FOLD,
+        best_lambda,
+        LOGISTIC_GAMMA,
+        LOGISTIC_MAX_ITERS,
+        THRESHOLDS_TO_TRY,
     )
 
 
