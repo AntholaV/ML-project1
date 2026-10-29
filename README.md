@@ -1,6 +1,6 @@
 # CS-433 Machine Learning — Project 1
 
-Team: <Full name 1>, Carolina Antunes Pereira
+Team: Anthony Grand, Carolina Antunes Pereira
 
 ## Overview
 
